@@ -1,0 +1,42 @@
+/* mf */
+
+.loading-overlay {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  opacity: 0.7;
+}
+
+.beta {
+    color: #F0F3BD;
+}
+
+.spin-loader {
+    background: url("../img/wait.gif") no-repeat center center transparent; 
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+  
+}
+
+#mapid { height: 800px; }
+
+#loading-message {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 300px;
+    height: 100px;
+}
+
+#buscar-btn { padding-right: 0px;}
