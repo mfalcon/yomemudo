@@ -1,15 +1,13 @@
 from datetime import datetime
 import csv
 import json
+from math import radians, cos, sin, asin, sqrt, pi
+
 import requests as rq
 
-from scipy.spatial import cKDTree
-from scipy import inf
 
 GEOCODING_URL = "http://ws.usig.buenosaires.gob.ar/geocoder/2.2/reversegeocoding?"
-
 GEOCOORD_URL = "http://ws.usig.buenosaires.gob.ar/rest/convertir_coordenadas?output=lonlat&"
-
 
 def origenes_geo():
     origenes = {}
@@ -41,59 +39,6 @@ def get_latlong(x,y):
     
     return float(lon), float(lat)
 
-
-def get_coords():
-    #used once to calculate dict
-    BARRIOS_COORDS = {}
-    for barrio, latlong in origenes_lat_long.items():
-        url = GEOCODING_URL + 'x=%s&y=%s' % (latlong[0], latlong[1])
-        resp = rq.get(url)
-        print url
-        try:
-            data = eval(resp.content)
-        except:
-            print barrio
-            pass
-        c_x = data['puerta_x']
-        c_y = data['puerta_y']
-        BARRIOS_COORDS[barrio] = (c_x, c_y)
-    import pdb; pdb.set_trace()
-
-
-
-def nearest_points(lat,lon):
-    from functools import partial
-    dist = lambda s,d: (float(s[0])-float(d[0]))**2+(float(s[1])-float(d[1]))**2 #a little function which calculates the distance between two coordinates
-    a = origenes_lat_long.values()
-    coord = (lon, lat)
-    nearest = min(a, key=partial(dist, coord)) #find the min value using the distance function with coord parameter
-    import pdb; pdb.set_trace()
-    
-
-def points_within_radius(target_points, theme_points, radius):
-    
-    max_distance = radius # 0.0001 Assuming lats and longs are in decimal degrees, this corresponds to 11.1 meters
-    points = theme_points #[(lat1, long1), (lat2, long2) ... ]
-    tree = cKDTree(points)
-
-    points_neighbors = {} # Put the neighbors of each point here
-    
-    for tp in target_points:
-        casted_tp = (float(tp[1]),float(tp[0]))
-        distances, indices = tree.query(casted_tp, len(points), p=2, distance_upper_bound=max_distance)
-        point_neighbors = []
-        for index, distance in zip(indices, distances):
-            if distance == inf:
-                break
-
-            point_neighbors.append({'points': points[index], 'distance': distance, 'haversine': haversine(float(tp[1]),float(tp[0]),float(points[index][1]),float(points[index][0]))})
-        
-        points_neighbors[tp] = point_neighbors
-    return points_neighbors
-
-
-
-from math import radians, cos, sin, asin, sqrt, pi
 
 def haversine(lon1, lat1, lon2, lat2):
     """
